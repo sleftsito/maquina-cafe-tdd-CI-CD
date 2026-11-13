@@ -36,6 +36,24 @@ Con el nivel `detailed`, cada prueba muestra un mensaje `[OK]` en la consola
 después de completar correctamente sus comprobaciones. Al final se muestra el
 resumen de las 21 pruebas aprobadas.
 
+## Integración continua con GitHub Actions
+
+El workflow [`CI Pipeline`](.github/workflows/ci-pipeline.yml) se ejecuta en cada
+`push` y `pull_request`. En Ubuntu con .NET 8 restaura las dependencias, compila
+la solución en modo `Release` y ejecuta las pruebas. Si la compilación o alguna
+prueba falla, la ejecución del workflow queda marcada como fallida en la pestaña
+**Actions** del repositorio.
+
+Para ejecutar localmente los mismos pasos desde la carpeta principal:
+
+```bash
+dotnet restore MaquinaCafe.sln
+dotnet build MaquinaCafe.sln --configuration Release --no-restore
+dotnet test MaquinaCafe.sln --configuration Release --no-build
+```
+
+El workflow verifica compilación y pruebas (CI); no realiza despliegues.
+
 Las pruebas están organizadas por componente:
 
 | Archivo                 | Qué comprueba                              | Pruebas |
@@ -91,5 +109,7 @@ maquina-cafe-tdd/
 │   ├── CafeteraTests.cs
 │   ├── AzucareroTests.cs
 │   └── MaquinaDeCafeTests.cs
+├── .github/workflows/ci-pipeline.yml
+├── .gitignore
 └── README.md
 ```
