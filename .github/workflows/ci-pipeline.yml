@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restaurar dependencias
+        run: dotnet restore MaquinaCafe.sln
+
+      - name: Compilar solución
+        run: dotnet build MaquinaCafe.sln --configuration Release --no-restore
+
+      - name: Ejecutar pruebas
+        run: dotnet test MaquinaCafe.sln --configuration Release --no-build --logger "console;verbosity=normal"
